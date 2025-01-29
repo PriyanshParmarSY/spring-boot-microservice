@@ -11,10 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -36,7 +33,7 @@ class QuestionServiceImplTest {
         List<Question> questions = Arrays.asList(question1, question2);
         when(questionRepositry.findAll()).thenReturn(questions);
         ResponseEntity<Response<List<Question>>> allQuestions = questionService.getAll();
-        assertEquals(2, allQuestions.getBody().getData().size());
+        assertEquals(2, Objects.requireNonNull(allQuestions.getBody()).getData().size());
         assertEquals(HttpStatus.OK, allQuestions.getStatusCode());
         assertEquals(questions, allQuestions.getBody().getData());
     }
@@ -46,7 +43,7 @@ class QuestionServiceImplTest {
         List<Question> questions = new ArrayList<>();
         when(questionRepositry.findAll()).thenReturn(questions);
         ResponseEntity<Response<List<Question>>> allQuestions = questionService.getAll();
-        List<Question> data = allQuestions.getBody().getData();
+        List<Question> data = Objects.requireNonNull(allQuestions.getBody()).getData();
         assertEquals(HttpStatus.NOT_FOUND, allQuestions.getStatusCode());
         assertNull(allQuestions.getBody().getData());
     }
@@ -57,7 +54,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.findById(1L)).thenReturn(questionOptional);
         ResponseEntity<Response<Question>> responseEntity = questionService.getById(1L);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(questionOptional.get(), responseEntity.getBody().getData());
+        assertEquals(questionOptional.get(), Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -66,7 +63,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.findById(1L)).thenReturn(questionOptional);
         ResponseEntity<Response<Question>> responseEntity = questionService.getById(1L);
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        assertNull(responseEntity.getBody().getData());
+        assertNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -75,7 +72,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.save(question)).thenReturn(question);
         ResponseEntity<Response<Question>> responseEntity = questionService.createQuestion(question);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-        assertEquals(question,responseEntity.getBody().getData());
+        assertEquals(question, Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -83,7 +80,7 @@ class QuestionServiceImplTest {
         Question question = null;
         ResponseEntity<Response<Question>> responseEntity = questionService.createQuestion(question);
         assertEquals(HttpStatus.NOT_ACCEPTABLE, responseEntity.getStatusCode());
-        assertEquals(question,responseEntity.getBody().getData());
+        assertEquals(question, Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -95,7 +92,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.findByQuizId(1L)).thenReturn(questions);
         ResponseEntity<Response<List<Question>>> responseEntity = questionService.getQuestionByQuizId(1L);
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
-        assertEquals(questions,responseEntity.getBody().getData());
+        assertEquals(questions, Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -104,7 +101,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.findByQuizId(1L)).thenReturn(questions);
         ResponseEntity<Response<List<Question>>> responseEntity = questionService.getQuestionByQuizId(1L);
         assertEquals(HttpStatus.NOT_FOUND,responseEntity.getStatusCode());
-        assertNull(responseEntity.getBody().getData());
+        assertNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     @Test
@@ -131,7 +128,7 @@ class QuestionServiceImplTest {
         when(questionRepositry.findById(1L)).thenReturn(questionOptional);
         ResponseEntity<Response<Question>> responseEntity = questionService.updateQuestionById(1L, new Question(1L, "test@123", 1L));
         assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
-        assertEquals("test@123",responseEntity.getBody().getData().getQuestion());
+        assertEquals("test@123", Objects.requireNonNull(responseEntity.getBody()).getData().getQuestion());
     }
 
     @Test
